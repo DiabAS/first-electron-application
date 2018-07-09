@@ -1,0 +1,25 @@
+{
+  "name": "first-application",
+  "version": "1.0.0",
+  "description": "First application",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "electron .",
+    "build": "electron-packager . first-application --platform=win32 --arch=x64 --app-version=0.1.0 --out=application --ignore=application --prune --overwrite --asar=true",
+    "archive": "asar pack application/first-application-win32-x64/resources/app application/first-application-win32-x64/resources/app.asar"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "electron": "^2.0.4"
+  },
+  "dependencies": {
+    "asar": "^0.14.3",
+    "electron-packager": "^12.1.0",
+    "flv.js": "^1.4.2",
+    "hls.js": "^0.10.1"
+  },
+  "publishName": "first-application",
+  "electronVersion": "0.33.3"
+}

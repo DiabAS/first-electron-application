@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>First application</title>
+        <style>
+            .videoCentered {
+                width: 720px;
+                margin-left: auto;
+                margin-right: auto;
+                display: block
+            }
+            .innerControls {
+                display:block;
+                float: left;
+                width: 99%;
+                margin: 3px;
+                padding-left: 3px;
+                font-size: 10pt
+            }
+        </style>
+    </head>
+    <body>
+        <h1>First application</h1>
+        <div>
+            Мы используем node <script> document.write (process.versions.node)</script>,
+            Chrome <script>document.write (process.versions.chrome)</script>,
+            и Electron<script>document.write (process.versions.electron)</script>.
+        </div>
+        <!-- flv.js -->
+        <!-- В flv не работает прокрутка -->
+        <!-- <video height=200 controls="controls" id="video-flv"></video> -->
+        <!--
+        <script src="node_modules/flv.js/dist/flv.min.js"></script>
+        <script>
+            var extension_type = 'flv';
+            var video_flv_url = '';
+            if (flvjs.isSupported()) {
+                var video_flv = document.getElementById('video-flv');
+                var flvPlayer = flvjs.createPlayer({
+                    type: extension_type,
+                    url: video_flv_url
+                });
+                flvPlayer.attachMediaElement(video_flv);
+                flvPlayer.load();
+                flvPlayer.play();
+            }
+        </script>
+        -->
+
+        <div>
+            <input class="innerControls" type="text" id="video-url" onchange="loadVideo(this)">
+        </div>
+        <div>
+            <video class="videoCentered" controls="" autoplay="" id="video-hls"></video>
+        </div>
+
+        <!-- hls.js -->
+        <script src="node_modules/hls.js/dist/hls.min.js"></script>
+        <!-- <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script> -->
+        <!-- Or if you want a more recent canary version -->
+        <!-- <script src="https://cdn.jsdelivr.net/npm/hls.js@canary"></script> -->
+        <script>
+            var video = document.getElementById('video-hls');
+            var video_hls_url = '';
+            // Как глобальная переменная
+            var hls = null;
+            playVideo();
+
+            function playVideo()
+            {
+                if (Hls.isSupported()) {
+                    hls = new Hls();
+                    hls.loadSource(video_hls_url);
+                    hls.attachMedia(video);
+                    hls.on(Hls.Events.MANIFEST_PARSED,function() {
+                      video.play();
+                    });
+                } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+                    video.src = video_hls_url;
+                    video.addEventListener('loadedmetadata',function() {
+                        video.play();
+                    });
+                }
+            }
+
+            function loadVideo(element_object)
+            {
+                // TODO: Проверка валидности URL
+                video_hls_url = element_object.value;
+                if (hls) {
+                    hls.destroy();
+                    if (hls.bufferTimer) {
+                      clearInterval(hls.bufferTimer);
+                      hls.bufferTimer = undefined;
+                    }
+                    hls = null;
+                }
+                playVideo();
+            }
+        </script>
+    </body>
+</html>
